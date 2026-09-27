@@ -1,0 +1,30 @@
+{
+    "id": 0,
+    "duration": "1 (year)",
+    "place_of_interests": [
+        "beach",
+        "ocean",
+        "food",
+        "shopping"
+    ],
+    "vibe": [
+        "relaxing",
+        "vacation"
+    ],
+    "place_of_activites": [
+        "rent a beach house",
+        "fishing",
+        "eating pizza",
+        "eating pasta",
+        "shopping"
+    ],
+    "specific_named_places": [
+        "Westfield"
+    ],
+    "country_names": [
+        "Australia"
+    ],
+    "city_names": [
+        "Sydney"
+    ]
+}

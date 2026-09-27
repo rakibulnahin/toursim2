@@ -1,0 +1,51 @@
+{
+    "sample_json": {
+        "name": "Blue Mountains National Park",
+        "text_content": "The Blue Mountains Range comprises a range of mountains, plateau escarpments extending off the Great Dividing Range about 4.8 kilometres (3.0 mi) northwest of Wolgan Gap in a generally southeasterly direction for about 96 kilometres (60 mi), terminating at Emu Plains.",
+        "latitude": -33.82825573414582,
+        "longitude": 150.3235652450569,
+        "place_of_interests": [
+            "national park",
+            "mountain",
+            "scenic view"
+        ],
+        "vibe": [
+            "adventure",
+            "nature"
+        ],
+        "place_of_activites": [
+            "hiking",
+            "camping",
+            "restuarant",
+            "bar"
+        ],
+        "country": "Australia",
+        "state": "New South Wales",
+        "locality": [
+            "Blue Mountain",
+            "Lithgow"
+        ],
+        "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmVV7THqy21bQt_K0GRn0_ecshRstdDeLaJXIyrwCwAqMcTs9BqasQUqgrnVEmmiYvTfqqUR2lHZljv-FCZ1jDRwbYx8MpURcjnzNtgXN3W2PQZisdl2ENm_URUVwJ8gH3yzixU5w=w408-h306-k-no"
+    },
+    "preference_extracted": {
+        "duration": "1 (year)",
+        "place_of_interests": [
+            "mountain",
+            "hiking"
+        ],
+        "vibe": [
+            "adventure"
+        ],
+        "place_of_activites": [
+            "hiking"
+        ],
+        "specific_named_places": [
+            "Blue Mountains"
+        ],
+        "country_names": [
+            "Australia"
+        ],
+        "city_names": [],
+        "raw_user_input": "I want to go on a 1 year break in Australia with mountain adventure, hiking in Blue Mountains."
+    }
+}
