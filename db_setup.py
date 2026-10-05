@@ -62,6 +62,10 @@ def load_sample_data(filepath="chroma_sample.json"):
 def setup_chroma_db():
     print("Setting up Chroma DB with LlamaIndex...", flush=True)
     db = chromadb.PersistentClient(path=DB_PATH)
+    try:
+        db.delete_collection(COLLECTION_NAME)
+    except Exception:
+        pass
     chroma_collection = db.get_or_create_collection(COLLECTION_NAME)
     
     # Prepare documents for LlamaIndex

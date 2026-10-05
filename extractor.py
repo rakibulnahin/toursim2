@@ -1,23 +1,7 @@
 import json
 import re
 from abstract_llm import AbstractLLM
-
-
-SYSTEM_PROMPT = (
-    "Role: You are an expert in information extraction.\n"
-    "Goal: You will be given a user prompt and you will extract the information based strictly on the output structure given below.\n"
-    "Restriction: Do not put anything in the output that is not mentioned or implied by the prompt.\n"
-    "Output JSON format:\n"
-    "{\n"
-    '   "duration": "number with a string of the duration like 1 (month) 3 (days) 6 (hours) 10 (years)",\n'
-    '   "place_of_interests": ["list of type of places like beach, mountain, lake, forest, views, scenery"],\n'
-    '   "vibe": ["list of type of vibe/mood like relaxing, fun, romantic, chill, adventure, vacation"],\n'
-    '   "place_of_activites": ["list of activities like hiking, swimming, skydiving, restaurants, snowboarding"],\n'
-    '   "specific_named_places": ["name of specific places mentioned in prompt like La Spiazza, Westfield, IMAX Sydney, Sydney Opera House"],\n'
-    '   "country_names": ["name of countries mentioned in prompt like Australia, Denmark, Bangladesh, Japan"],\n'
-    '   "city_names": ["name of cities mentioned in prompt like Sydney, Copenhagen, Dhaka, Tokyo"]\n'
-    "}\n"
-)
+from prompts import EXTRACTOR_SYSTEM_PROMPT
 
 DEFAULT_SCHEMA = {
     "duration": "unspecified",
@@ -85,17 +69,17 @@ class PreferenceExtractor:
         text = user_input.lower()
         
         interests = []
-        for word in ["beach", "mountain", "ocean", "lake", "forest", "scenery", "views", "shopping", "food", "park", "museum"]:
+        for word in ["beach", "mountain", "ocean", "lake", "forest", "scenery", "views", "shopping", "food", "park", "museum", "island", "trail"]:
             if word in text:
                 interests.append(word)
 
         vibes = []
-        for word in ["relaxing", "vacation", "adventure", "nature", "romantic", "chill", "fun", "city", "foodie"]:
+        for word in ["relaxing", "vacation", "adventure", "nature", "romantic", "chill", "fun", "city", "foodie", "warm", "sunny", "tropical", "scenic"]:
             if word in text:
                 vibes.append(word)
 
         activities = []
-        for phrase in ["sunset", "wine", "pub", "bar", "restaurant", "hiking", "camping", "swimming", "fishing", "surfing", "shopping"]:
+        for phrase in ["sunset", "wine", "pub", "bar", "restaurant", "hiking", "camping", "camp", "swimming", "fishing", "surfing", "shopping", "sightseeing", "walking"]:
             if phrase in text:
                 activities.append(phrase)
 
@@ -128,7 +112,7 @@ class PreferenceExtractor:
         if self.llm is not None:
             try:
                 print(f"[PreferenceExtractor] Running LLM extraction on prompt: '{user_input}'...", flush=True)
-                response = self.llm.call_llm(SYSTEM_PROMPT, user_input)
+                response = self.llm.call_llm(EXTRACTOR_SYSTEM_PROMPT, user_input)
                 raw_output = response["choices"][0]["message"]["content"]
                 parsed = json.loads(raw_output)
                 validated = self.validate_and_format_schema(parsed)

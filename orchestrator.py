@@ -1,119 +1,100 @@
 import sys
 import json
+import os
 from extractor import PreferenceExtractor
 from database_agent import DatabaseAgent
 from search_agent import SearchAgent
 from abstract_llm import AbstractLLM
+from prompts import VALIDATOR_SYSTEM_PROMPT, build_validation_user_prompt
 
 
 class OrchestratorAgent:
     """
-    Orchestrator Agent:
+    Orchestrator Agent (Hybrid Multi-Agent Tourism System):
     - Chats with users about desired tourism preferences.
-    - Extracts structured requirements.
-    - Calls Database Agent (Chroma DB via LlamaIndex).
-    - Calls Search Agent (web search fallback/enrichment).
-    - Evaluates batch candidates in a single LLM call with strict >= 85% confidence.
+    - Extracts structured requirements via PreferenceExtractor.
+    - Queries Database Agent (Chroma DB via LlamaIndex).
+    - Calls Search Agent in Hybrid Mode to return at least 10 high-quality suggestions worldwide.
+    - Evaluates batch candidates in a single LLM call using prompts from 'prompts.py'.
+    - Automatically saves newly discovered search destinations into ChromaDB for future queries.
     """
 
     def __init__(self):
-        self.SYSTEM_PROMPT = """Role: You are a strict Travel Recommendation Evaluator.
-Goal: Evaluate a list of candidate destinations against the user's travel preferences and query. For each candidate, provide a relevance confidence score between 0.00 and 1.00.
-
-Evaluation Guidelines:
-1. Location Constraint (Weight: 40%):
-- If the user specifies a Country or City and candidate is in a DIFFERENT location, max score is 0.20.
-- If location matches or was not specified by user, award up to 0.40.
-
-2. Place Type & Core Interest (Weight: 35%):
-- If user asks for a "beach" and candidate is a "mall", "mountain", or unrelated, max score is 0.30.
-- If place type matches the core interest, award up to 0.35.
-
-3. Vibe & Activities (Weight: 25%):
-- Award up to 0.25 based on match with requested vibe (relaxing, chill, etc.) and activities (sunset, wine, pub, etc.).
-
-Scoring Reference:
-- 0.85 - 1.00: High quality match.
-- 0.50 - 0.84: Partial match.
-- 0.00 - 0.49: Severe mismatch.
-
-Output Format:
-You must respond strictly with a valid JSON object matching this schema:
-{
-  "evaluations": [
-    {
-      "candidate_index": 1,
-      "name": "Candidate Name",
-      "confidence_score": 0.92,
-      "valid": true,
-      "reason": "Brief 1-sentence reason"
-    }
-  ]
-}
-
---- EXAMPLE ---
-Input:
-Candidates: [
-  {"candidate_index": 1, "name": "Bondi Beach", "country": "Australia", "place_of_interests": ["beach"], "vibe": ["relaxing"], "place_of_activites": ["sunset", "wine", "pub"]},
-  {"candidate_index": 2, "name": "Westfield Sydney", "country": "Australia", "place_of_interests": ["shopping"], "vibe": ["busy"], "place_of_activites": ["shopping"]}
-]
-User Preference: {"place_of_interests": ["beach"], "vibe": ["relaxing"], "place_of_activites": ["sunset", "wine", "pub"], "country_names": ["Australia"]}
-User Query: "I want a relaxing beach holiday in Australia to drink wine and watch sunset"
-
-Output:
-{
-  "evaluations": [
-    {"candidate_index": 1, "name": "Bondi Beach", "confidence_score": 0.95, "valid": true, "reason": "Exact match for Australian beach, relaxing vibe, and sunset/wine activities."},
-    {"candidate_index": 2, "name": "Westfield Sydney", "confidence_score": 0.25, "valid": false, "reason": "Shopping mall does not match requested beach destination."}
-  ]
-}
-"""
         print("[Orchestrator] Initializing Multi-Agent System...")
+        # 1. Initialize the single shared LLM instance
         self.llm = AbstractLLM()
+
+        # 2. Inject shared LLM into all agents
         self.extractor = PreferenceExtractor(llm=self.llm)
         self.db_agent = DatabaseAgent()
-        self.search_agent = SearchAgent()
+        self.search_agent = SearchAgent(llm=self.llm)
         print("[Orchestrator] Ready to serve tourism requests!")
 
-    def check_validity(self, place_results: list, preferences: dict, user_input: str, min_confidence: float = 0.85) -> tuple[bool, list]:
+    def check_validity(self, place_results: list, preferences: dict, user_input: str, min_confidence: float = 0.75) -> tuple[bool, list]:
         """
-        Check validity & confidence for candidate places in a single batch LLM call.
-        Enforces confidence >= min_confidence (85%).
+        Fast Heuristic Pre-Filtering + Consolidated LLM Validation:
+        1. Instantly scores all candidates using heuristic rules (<1ms). Discards severe mismatches (score < 0.40).
+        2. Validates only the top promising candidates in a single consolidated LLM call (instead of multiple slow loops).
+        3. Enforces confidence >= min_confidence.
         """
         if not place_results:
             return False, []
 
-        print(f"\n[Orchestrator] Performing Batch Evaluation on {len(place_results)} candidate(s)...", flush=True)
+        print(f"\n[Orchestrator] Performing Fast Heuristic Pre-Filtering on {len(place_results)} candidate(s)...", flush=True)
 
-        candidates_payload = [
-            {
-                "candidate_index": idx,
-                "name": p.get("name", ""),
-                "country": p.get("country", ""),
-                "place_of_interests": p.get("place_of_interests", []),
-                "vibe": p.get("vibe", []),
-                "place_of_activites": p.get("place_of_activites", []),
-                "summary": str(p.get("text_content", ""))[:200]
-            }
-            for idx, p in enumerate(place_results, 1)
-        ]
+        # Step 1: Fast Heuristic Pre-Score (Runs in <1ms)
+        scored_candidates = []
+        for idx, place in enumerate(place_results, 1):
+            h_score = self.search_agent.evaluate_confidence(
+                place.get("name", ""),
+                place.get("text_content", ""),
+                preferences
+            )
+            place["heuristic_score"] = h_score
+            # Pre-filter: keep candidates with reasonable potential (heuristic score >= 0.40)
+            if h_score >= 0.40:
+                scored_candidates.append((idx, place))
+            else:
+                name_lbl = self._clean_ascii(place.get("name", "Unknown"))
+                print(f"[Orchestrator] Candidate #{idx} '{name_lbl}' dropped early by Heuristic Filter (score: {int(h_score*100)}% < 40%)", flush=True)
 
-        USER_PROMPT = json.dumps({
-            "candidates": candidates_payload,
-            "user_preference": preferences,
-            "user_query": user_input
-        }, indent=2)
+        if not scored_candidates:
+            print(f"[Orchestrator] Validity check: No candidate passed heuristic pre-filtering.", flush=True)
+            return False, []
 
+        # Sort promising candidates by heuristic score descending
+        scored_candidates.sort(key=lambda x: x[1].get("heuristic_score", 0.0), reverse=True)
+
+        # Step 2: Validate the top candidates in a SINGLE consolidated LLM call (max 8 candidates)
+        top_candidates = scored_candidates[:8]
         evaluations = []
+
         if self.llm and self.llm.llm is not None:
+            candidates_payload = [
+                {
+                    "candidate_index": orig_idx,
+                    "name": p.get("name", ""),
+                    "country": p.get("country", ""),
+                    "place_of_interests": p.get("place_of_interests", []),
+                    "vibe": p.get("vibe", []),
+                    "place_of_activites": p.get("place_of_activites", []),
+                    "summary": str(p.get("text_content", ""))[:140]
+                }
+                for orig_idx, p in top_candidates
+            ]
+
+            user_prompt = build_validation_user_prompt(candidates_payload, preferences, user_input)
+            print(f"[Orchestrator] Sending single consolidated batch of {len(candidates_payload)} candidate(s) to LLM...", flush=True)
+
             try:
-                response = self.llm.call_llm(self.SYSTEM_PROMPT, USER_PROMPT)
+                response = self.llm.call_llm(VALIDATOR_SYSTEM_PROMPT, user_prompt)
                 raw_content = response["choices"][0]["message"]["content"]
                 parsed = json.loads(raw_content)
                 evaluations = parsed.get("evaluations", []) if isinstance(parsed, dict) else (parsed if isinstance(parsed, list) else [])
             except Exception as e:
-                print(f"[Orchestrator] Batch LLM evaluation error: {e}. Falling back to heuristic scoring.", flush=True)
+                print(f"[Orchestrator] LLM evaluation notice: {e}. Falling back to heuristic scoring.", flush=True)
 
+        # Step 3: Map evaluation scores and finalize results
         eval_map = {}
         for ev in evaluations:
             if "candidate_index" in ev:
@@ -122,18 +103,18 @@ Output:
                 eval_map[str(ev["name"]).strip().lower()] = ev
 
         valid_places = []
-        for idx, place in enumerate(place_results, 1):
+        for orig_idx, place in top_candidates:
             name_key = str(place.get("name", "")).strip().lower()
-            ev = eval_map.get(idx) or eval_map.get(name_key)
+            ev = eval_map.get(orig_idx) or eval_map.get(name_key)
 
             if ev and "confidence_score" in ev:
                 try:
                     score = float(ev["confidence_score"])
                 except (ValueError, TypeError):
-                    score = self.search_agent.evaluate_confidence(place.get("name", ""), place.get("text_content", ""), preferences)
-                reason = ev.get("reason", "LLM batch evaluated.")
+                    score = place.get("heuristic_score", 0.70)
+                reason = ev.get("reason", "LLM validated.")
             else:
-                score = self.search_agent.evaluate_confidence(place.get("name", ""), place.get("text_content", ""), preferences)
+                score = place.get("heuristic_score", 0.70)
                 reason = "Heuristic match."
 
             score = min(1.0, max(0.0, round(score, 2)))
@@ -141,29 +122,46 @@ Output:
             place["confidence"] = f"{int(score * 100)}%"
             place["evaluation_reason"] = reason
 
-            title = place.get("name", "Unknown")
+            title = self._clean_ascii(place.get("name", "Unknown"))
+            country_label = self._clean_ascii(place.get('country', 'N/A'))
+            clean_reason = self._clean_ascii(reason)
             if score >= min_confidence:
-                print(f"[Orchestrator] Candidate #{idx} '{title}' -> Confidence: {place['confidence']} (PASSED >= {int(min_confidence * 100)}%) | Reason: {reason}", flush=True)
+                print(f"[Orchestrator] Candidate #{orig_idx} '{title}' ({country_label}) -> Confidence: {place['confidence']} (PASSED >= {int(min_confidence * 100)}%) | Reason: {clean_reason}", flush=True)
                 valid_places.append(place)
             else:
-                print(f"[Orchestrator] Candidate #{idx} '{title}' -> Confidence: {place['confidence']} (FAILED < {int(min_confidence * 100)}%) | Reason: {reason}", flush=True)
+                print(f"[Orchestrator] Candidate #{orig_idx} '{title}' ({country_label}) -> Confidence: {place['confidence']} (BELOW {int(min_confidence * 100)}%) | Reason: {clean_reason}", flush=True)
+
+        # Adaptive Relaxation: If fewer than 5 candidates passed strictly at min_confidence,
+        # gracefully accept high-quality combination matches (score >= 0.50) while strictly preserving location integrity
+        if len(valid_places) < 5:
+            print(f"[Orchestrator] Adaptive Mode: Only {len(valid_places)} strictly passed. Adding top combination matches (score >= 50%)...", flush=True)
+            valid_names = {p.get("name", "").strip().lower() for p in valid_places}
+            for orig_idx, place in top_candidates:
+                p_name = place.get("name", "").strip().lower()
+                p_score = place.get("confidence_score", 0.0)
+                # Ensure location penalty candidates (<= 0.15) are NEVER added
+                if p_name not in valid_names and p_score >= 0.50:
+                    valid_names.add(p_name)
+                    valid_places.append(place)
+                    t_name = self._clean_ascii(place.get("name", "Unknown"))
+                    t_country = self._clean_ascii(place.get('country', 'N/A'))
+                    print(f"[Orchestrator] Accepted combination candidate '{t_name}' ({t_country}) -> Confidence: {place['confidence']}", flush=True)
+                    if len(valid_places) >= 8:
+                        break
+
+        # Sort valid places by confidence score descending
+        valid_places.sort(key=lambda x: x.get("confidence_score", 0.0), reverse=True)
 
         if valid_places:
-            print(f"[Orchestrator] Validity check PASSED: {len(valid_places)} matched with >= {int(min_confidence * 100)}% confidence.\n", flush=True)
+            print(f"[Orchestrator] Validity check: {len(valid_places)} matched.\n", flush=True)
             return True, valid_places
         else:
-            print(f"[Orchestrator] Validity check FAILED: No candidate passed >= {int(min_confidence * 100)}% confidence threshold.\n", flush=True)
+            print(f"[Orchestrator] Validity check: No candidate passed matching threshold.\n", flush=True)
             return False, []
 
-    def process_request(self, user_input: str) -> str:
+    def process_request_structured(self, user_input: str, target_count: int = 10) -> dict:
         """
-        Full orchestration workflow:
-        1. Extract preferences via PreferenceExtractor
-        2. Query ChromaDB via DatabaseAgent
-        3. Batch evaluate database candidates (>= 85% confidence)
-        4. If database returns are insufficient/invalid, query SearchAgent
-        5. Batch evaluate search candidates (>= 85% confidence)
-        6. Return formatted recommendation or graceful fallback message
+        Full Hybrid Orchestration Workflow returning structured dict (used by FastAPI and CLI).
         """
         print(f"\n--- New Request: '{user_input}' ---")
 
@@ -171,26 +169,64 @@ Output:
         preferences = self.extractor.extract(user_input)
 
         # Step 2: Call Database Agent (Chroma DB + LlamaIndex)
-        db_results = self.db_agent.search_database(preferences)
+        db_results = self.db_agent.search_database(preferences, top_k=target_count)
 
         # Step 3: Check validity of database results in batch
         is_valid_db, valid_db_places = self.check_validity(db_results, preferences, user_input, min_confidence=0.85)
 
-        if is_valid_db:
-            return self.format_response(valid_db_places, source="Local Database (Chroma + LlamaIndex)")
+        for p in valid_db_places:
+            p["source"] = "Local Database"
 
-        # Step 4: If database return invalid or empty, call Search Agent
-        print("[Orchestrator] Database results insufficient or below 85% confidence threshold. Calling Search Agent...", flush=True)
-        search_results = self.search_agent.search_online(preferences)
+        combined_places = list(valid_db_places)
+        seen_names = {p.get("name", "").strip().lower() for p in combined_places}
 
-        # Step 5: Check validity of search results in batch
-        is_valid_search, valid_search_places = self.check_validity(search_results, preferences, user_input, min_confidence=0.85)
+        # Step 4: Hybrid Mode - If less than target_count places, search online for more
+        if len(combined_places) < target_count:
+            needed = target_count - len(combined_places)
+            print(f"[Orchestrator] Hybrid Mode: Found {len(combined_places)} local database match(es). Searching online for {needed} additional destinations worldwide...", flush=True)
 
-        if is_valid_search:
-            return self.format_response(valid_search_places, source="Web Search Agent")
+            search_candidates = self.search_agent.search_online(preferences, max_results=max(12, needed * 2))
 
-        # Step 6: If not valid, return apology message
-        return "Sorry, I can't work on this request as no destination in our system or online search matched your exact preferences. Please try refining your request!"
+            # Deduplicate against existing local places
+            fresh_search_candidates = [
+                p for p in search_candidates
+                if p.get("name", "").strip().lower() not in seen_names
+            ]
+
+            if fresh_search_candidates:
+                # Step 5: Batch evaluate search candidates
+                is_valid_search, valid_search_places = self.check_validity(fresh_search_candidates, preferences, user_input, min_confidence=0.70)
+
+                # Step 6: Automatically save newly discovered search destinations into ChromaDB for future queries
+                if valid_search_places:
+                    self.db_agent.insert_places(valid_search_places)
+
+                for p in valid_search_places:
+                    p["source"] = "Web / Wikipedia Search (Now Saved to DB)"
+                    if p.get("name", "").strip().lower() not in seen_names:
+                        seen_names.add(p.get("name", "").strip().lower())
+                        combined_places.append(p)
+                        if len(combined_places) >= target_count:
+                            break
+
+        # Step 7: Sort by confidence score descending
+        combined_places.sort(key=lambda x: x.get("confidence_score", 0.0), reverse=True)
+        final_places = combined_places[:target_count]
+
+        source_label = "Hybrid (Local Database + Global Search with Auto-DB Ingestion)" if len(final_places) > len(valid_db_places) else "Local Database"
+        return {
+            "success": len(final_places) > 0,
+            "user_query": user_input,
+            "preferences": preferences,
+            "places": final_places,
+            "total_places": len(final_places),
+            "source": source_label,
+            "formatted_text": self.format_response(final_places, source=source_label) if final_places else "Sorry, I can't work on this request as no destination in our database or online search matched your exact preferences. Please try refining your request!"
+        }
+
+    def process_request(self, user_input: str, target_count: int = 10) -> str:
+        res = self.process_request_structured(user_input, target_count=target_count)
+        return res["formatted_text"]
 
     def _clean_ascii(self, text: str) -> str:
         if not text:
@@ -201,10 +237,11 @@ Output:
         """
         Formats recommendations nicely for user display.
         """
-        lines = [f"=== Tourism Recommendations (Source: {source}) ==="]
+        lines = [f"=== Tourism Recommendations (Source: {source} | Total: {len(places)} Places) ==="]
         for idx, place in enumerate(places, 1):
             name = self._clean_ascii(place.get('name', 'Unknown'))
-            lines.append(f"\n[Place #{idx}] {name}")
+            place_src = place.get("source", "Hybrid")
+            lines.append(f"\n[Place #{idx}] {name} ({place_src})")
             if place.get("confidence"):
                 lines.append(f"   Match Confidence: {place.get('confidence')}")
             country = self._clean_ascii(place.get('country', 'N/A'))
@@ -218,6 +255,8 @@ Output:
                 lines.append(f"   Coordinates: Lat {lat}, Lon {lon}")
 
             desc = self._clean_ascii(place.get('text_content', ''))
+            if len(desc) > 280:
+                desc = desc[:280] + "..."
             lines.append(f"   Description: {desc}")
 
             if place.get("vibe"):
@@ -262,7 +301,7 @@ if __name__ == "__main__":
         res = orchestrator.process_request(test_prompt)
         print("\n" + res)
     else:
-        demo_prompt = "I want to go on a relaxing beach where i can see the sunset and drink some wine go to a pub and have a relaxing time"
+        demo_prompt = "I want to go on a relaxing beach where i can see the sunset and drink some wine go to a pub and have a relaxing time in Australia"
         print(f"Running Demo Query: '{demo_prompt}'")
         res = orchestrator.process_request(demo_prompt)
         print("\n" + res)

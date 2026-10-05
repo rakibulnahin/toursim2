@@ -1,22 +1,33 @@
-from llama_cpp import Llama
+import os
+
+try:
+    from llama_cpp import Llama
+except ImportError:
+    Llama = None
 
 
 class AbstractLLM:
     def __init__(self):
         self.llm = None
+        if Llama is None:
+            print("[AbstractLLM] llama_cpp not installed. Operating in fallback mode.")
+            return
+
         try:
-            print("[AbstracLLM] Initializing...")
+            print("[AbstractLLM] Initializing...")
+            gpu_layers = int(os.getenv("N_GPU_LAYERS", "0"))
+            threads = max(4, os.cpu_count() or 4)
             self.llm = Llama.from_pretrained(
                 repo_id="ggml-org/gemma-4-E2B-it-GGUF",
                 filename="gemma-4-E2B-it-Q4_0.gguf",
-                n_gpu_layers=0,
-                n_threads=4,
-                n_ctx=2048,
+                n_gpu_layers=gpu_layers,
+                n_threads=threads,
+                n_ctx=4096,
                 verbose=False,
             )
-            print("[AbstracLLM] Initialized successfully!")
+            print(f"[AbstractLLM] Initialized successfully with {threads} CPU threads and {gpu_layers} GPU layers!")
         except Exception as e:
-            print(f"[AbstracLLM] Failed to initialize: {e}")
+            print(f"[AbstractLLM] Failed to initialize: {e}")
             self.llm = None
 
     def call_llm(self, SYSTEM_PROMPT, USER_PROMPT):

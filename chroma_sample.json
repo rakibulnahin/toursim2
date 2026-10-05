@@ -1,51 +1,1204 @@
-{
-    "sample_json": {
-        "name": "Blue Mountains National Park",
-        "text_content": "The Blue Mountains Range comprises a range of mountains, plateau escarpments extending off the Great Dividing Range about 4.8 kilometres (3.0 mi) northwest of Wolgan Gap in a generally southeasterly direction for about 96 kilometres (60 mi), terminating at Emu Plains.",
-        "latitude": -33.82825573414582,
-        "longitude": 150.3235652450569,
-        "place_of_interests": [
-            "national park",
-            "mountain",
-            "scenic view"
-        ],
-        "vibe": [
-            "adventure",
-            "nature"
-        ],
-        "place_of_activites": [
-            "hiking",
-            "camping",
-            "restuarant",
-            "bar"
-        ],
-        "country": "Australia",
-        "state": "New South Wales",
-        "locality": [
-            "Blue Mountain",
-            "Lithgow"
-        ],
-        "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmVV7THqy21bQt_K0GRn0_ecshRstdDeLaJXIyrwCwAqMcTs9BqasQUqgrnVEmmiYvTfqqUR2lHZljv-FCZ1jDRwbYx8MpURcjnzNtgXN3W2PQZisdl2ENm_URUVwJ8gH3yzixU5w=w408-h306-k-no"
-    },
-    "preference_extracted": {
-        "duration": "1 (year)",
-        "place_of_interests": [
-            "mountain",
-            "hiking"
-        ],
-        "vibe": [
-            "adventure"
-        ],
-        "place_of_activites": [
-            "hiking"
-        ],
-        "specific_named_places": [
-            "Blue Mountains"
-        ],
-        "country_names": [
-            "Australia"
-        ],
-        "city_names": [],
-        "raw_user_input": "I want to go on a 1 year break in Australia with mountain adventure, hiking in Blue Mountains."
-    }
-}
+[
+  {
+    "name": "Blue Mountains National Park",
+    "text_content": "The Blue Mountains Range comprises a range of mountains, plateau escarpments extending off the Great Dividing Range about 4.8 kilometres (3.0 mi) northwest of Wolgan Gap in a generally southeasterly direction for about 96 kilometres (60 mi), terminating at Emu Plains.",
+    "latitude": -33.82825573414582,
+    "longitude": 150.3235652450569,
+    "place_of_interests": [
+      "national park",
+      "mountain",
+      "scenic view"
+    ],
+    "vibe": [
+      "adventure",
+      "nature"
+    ],
+    "place_of_activites": [
+      "hiking",
+      "camping",
+      "restuarant",
+      "bar"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Blue Mountain",
+      "Lithgow"
+    ],
+    "image_url": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWmVV7THqy21bQt_K0GRn0_ecshRstdDeLaJXIyrwCwAqMcTs9BqasQUqgrnVEmmiYvTfqqUR2lHZljv-FCZ1jDRwbYx8MpURcjnzNtgXN3W2PQZisdl2ENm_URUVwJ8gH3yzixU5w=w408-h306-k-no"
+  },
+  {
+    "name": "Bondi Beach",
+    "text_content": "Bondi Beach is a popular beach and the name of the surrounding suburb in Sydney, New South Wales, Australia. Known for iconic surfing, coastal walks, and vibrant beach houses.",
+    "latitude": -33.8915,
+    "longitude": 151.2767,
+    "place_of_interests": [
+      "beach",
+      "ocean",
+      "coastal walk"
+    ],
+    "vibe": [
+      "relaxing",
+      "vacation",
+      "surf"
+    ],
+    "place_of_activites": [
+      "rent a beach house",
+      "swimming",
+      "surfing",
+      "eating pizza",
+      "fishing"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney",
+      "Bondi"
+    ],
+    "image_url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+  },
+  {
+    "name": "Westfield Sydney & Opera House Precinct",
+    "text_content": "Central Sydney shopping district featuring Westfield shopping mall, luxury dining, La Spiazza restaurant, and proximity to Sydney Opera House.",
+    "latitude": -33.8688,
+    "longitude": 151.2093,
+    "place_of_interests": [
+      "shopping",
+      "landmark",
+      "food",
+      "harbour"
+    ],
+    "vibe": [
+      "city",
+      "shopping",
+      "foodie"
+    ],
+    "place_of_activites": [
+      "shopping",
+      "eating pasta",
+      "eating pizza",
+      "sightseeing"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "https://images.unsplash.com/photo-1528072164453-f4e8ef0d475a"
+  },
+  {
+    "name": "Whitehaven Beach",
+    "text_content": "Whitehaven Beach is on Whitsunday Island, Queensland, Australia. The island is accessible by boat, seaplane, or helicopter from Airlie Beach, as well as from Hamilton Island. It lies across from Stockyard Beach, also known as Chalkie's Beach, on Haslewood Island. The beach is seven kilometres in length and is famous for its white silica sands and turquoise water.",
+    "latitude": -20.27861111,
+    "longitude": 149.03638889,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "Queensland",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Whitehaven_Beach"
+  },
+  {
+    "name": "Champagne Beach (Vanuatu)",
+    "text_content": "Champagne Beach is a beach located on the island of Espiritu Santo in Vanuatu. The beach is famous for its crystal clear waters and powdery white sands, which make it ideal for snorkeling. It is visited regularly by tourists and cruise boats from Australia.\nIts name comes from the shape of its coastline, which resembles a champagne flute.\nChampagne Beach is nearby to the village Hog Harbour.",
+    "latitude": -15.143792,
+    "longitude": 167.120381,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Champagne_Beach_(Vanuatu)"
+  },
+  {
+    "name": "Nissi Beach",
+    "text_content": "Nissi Beach is a popular beach in the resort of Ayia Napa, Cyprus.\nThe beach stretches for 500 metres and the water is clean enough for the beach to have been awarded the blue flag designation. The beach, which runs the length of its own cove, takes its name from the small islet of Nissi (Greek: \u039d\u03b7\u03c3\u03af) located close to the coast. The uninhabited islet can be easily reached on foot through the shallow waters and its location provides a good shelter for the rest of the beach. The islet is covered w...",
+    "latitude": 34.988,
+    "longitude": 33.969,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Nissi_Beach"
+  },
+  {
+    "name": "Preveli Beach",
+    "text_content": "Preveli Beach (Greek: \u03a6\u03bf\u03b9\u03bd\u03b9\u03ba\u03cc\u03b4\u03b1\u03c3\u03bf\u03c2 \u03c4\u03b7\u03c2 \u03a0\u03c1\u03ad\u03b2\u03b5\u03bb\u03b7\u03c2, Finikodasos tis Prevelis) is a beach located on the south coast of the Greek Mediterranean island of Crete. It is located in the municipality of Agios Vasilios in the Rethymno regional unit, not far from the Moni Preveli monastery, whose name has passed on to it. According to local legend, the king of Ithaca, Odysseus, remained in the wider area of Lake Preveli after the end of the Trojan War on his return to Ithaca from Troy.\nThe area is a popula...",
+    "latitude": 35.1527,
+    "longitude": 24.4741,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Preveli_Beach"
+  },
+  {
+    "name": "Bali",
+    "text_content": "Bali (English:  ; Indonesian: ['bali]; Balinese: \u1b29\u1b2e\u1b36) is an Indonesian island and province and the westernmost of the Lesser Sunda Islands. East of Java and west of Lombok, the province includes the island of Bali and a few smaller offshore islands, notably Nusa Penida, Nusa Lembongan, and Nusa Ceningan to the southeast. The provincial capital, Denpasar, is the most populous city in the Lesser Sunda Islands and the second-largest, after Makassar, in Eastern Indonesia. The Denpasar metropolitan a...",
+    "latitude": -8.335,
+    "longitude": 115.08805556,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Indonesia",
+    "state": "Bali",
+    "locality": [
+      "Denpasar"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Bali"
+  },
+  {
+    "name": "Padang Padang Beach",
+    "text_content": "Padang Padang Beach (Pantai Padang Padang) is a 110-metre-long (120 yd) sandy beach in Pecatu on the Bukit Peninsula in Bali, Indonesia. It is characterised by fine white sand and tall cliffs.\nThe beach is known by locals as Labuan Sait Beach.",
+    "latitude": -8.81114,
+    "longitude": 115.1012,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Indonesia",
+    "state": "Bali",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Padang_Padang_Beach"
+  },
+  {
+    "name": "Dreamland Beach",
+    "text_content": "Dreamland Beach, now officially known as New Kuta Beach, is a beach located in Pecatu on the Bukit Peninsula on the island of Bali, Indonesia. A popular surfing beach, it was formerly secluded and had casual refreshment stands and inns. It has since become the beach of an extensive tourist development.\nThe beach, called Cimongka by the Balinese, was named Dreamland Beach by Australians. It was popular with surfers and also with nudists, and became the most popular beach in Pecatu. Starting in th...",
+    "latitude": -8.79944444,
+    "longitude": 115.11777778,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Indonesia",
+    "state": "Bali",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Dreamland_Beach"
+  },
+  {
+    "name": "Bilgola Beach",
+    "text_content": "Bilgola Beach is a suburb in Sydney's Northern Beaches in the state of New South Wales, Australia. Bilgola Beach is 33 kilometres north-east of the Sydney central business district, in the local government area of Northern Beaches Council. It and Bilgola Plateau were gazetted as suburbs in 2012, dividing the previous suburb of Bilgola.",
+    "latitude": -33.64565,
+    "longitude": 151.31782,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Bilgola_Beach"
+  },
+  {
+    "name": "Queenscliff, New South Wales",
+    "text_content": "Queenscliff is a suburb of northern Sydney, in the state of New South Wales, Australia. Queenscliff is located 16 kilometres north-east of the Sydney central business district, in the local government area of Northern Beaches Council and is part of the Northern Beaches region.",
+    "latitude": -33.7825,
+    "longitude": 151.28472222,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Queenscliff,_New_South_Wales"
+  },
+  {
+    "name": "Cable Beach",
+    "text_content": "Cable Beach is a 22 km (14 mi) stretch of white sand beach on the eastern Indian Ocean and the name of the surrounding suburb in Broome, Western Australia. Cable Beach was named after the telegraph cable laid between Broome and Java in 1889. Low cliffs of red ochre rise behind the very flat and wide beach, with waves that are mostly gentle in the dry season from May to October. In 2016, the population was 5,436.\n\n",
+    "latitude": -17.952226,
+    "longitude": 122.205577,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "Western Australia",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Cable_Beach"
+  },
+  {
+    "name": "Paros",
+    "text_content": "Paros (; Greek: \u03a0\u03ac\u03c1\u03bf\u03c2 [\u02c8paros]; Venetian: Paro) is a Greek island in the central Aegean Sea and part of the Cyclades island group. It lies 8 kilometers (5 miles) west of Naxos, separated by a narrow channel and about 150 km (93 miles) south-east of Piraeus. The Municipality of Paros covers about 196.308 square kilometres (75.795 sq mi), including numerous uninhabited offshore islets. Its closest neighbor is the municipality of Antiparos, located to the southwest. In ancient Greece, the island wa...",
+    "latitude": 37.06666667,
+    "longitude": 25.2,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Greece",
+    "state": "Cyclades",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Paros"
+  },
+  {
+    "name": "Vrachati",
+    "text_content": "Vrachati (Greek: \u0392\u03c1\u03b1\u03c7\u03ac\u03c4\u03b9) is a beach town in the municipal unit of Vocha, Corinthia, Greece, population 3,603 (2021). It is located 12 km west of Corinth, and is a very popular destination for day trippers from Athens. Its beach has been awarded with the blue flag from the European Union. Vrachati is located on the Gulf of Corinth. The local economy is based on tourism and on the production of citrus fruits.",
+    "latitude": 37.95,
+    "longitude": 22.8,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Greece",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Vrachati"
+  },
+  {
+    "name": "Waik\u012bk\u012b",
+    "text_content": "Waik\u012bk\u012b  (; Hawaiian: [w\u0250j\u02c8ki\u02d0ki\u02d0, v\u0250j\u02c8ti\u02d0ti\u02d0]) is a Honolulu neighborhood and the eponymous Waik\u012bk\u012b beach on its south shore, on the island of O\u02bbahu in the U.S. state of Hawaii. (Despite situational use of the spelling \"Waikiki\", typically in materials aimed at tourists, the spelling \"Waik\u012bk\u012b\" is official and common.)\nWaik\u012bk\u012b Beach is one of six beaches in the district, along with Queen's Beach, Kuhio Beach, Gray's Beach, Fort DeRussy Beach, and Kahanamoku Beach. The sandy beach is almost entir...",
+    "latitude": 21.2752,
+    "longitude": -157.8312,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "International",
+    "state": "Hawaii",
+    "locality": [
+      "Honolulu",
+      "Waikiki"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Waik%C4%ABk%C4%AB"
+  },
+  {
+    "name": "Honolulu",
+    "text_content": "Honolulu (  HON-\u0259-LOO-loo; Hawaiian: [hono\u02c8lulu]) is the capital and most populous city of the U.S. state of Hawaii, located in the Pacific Ocean. It is the county seat of the consolidated City and County of Honolulu, situated along the southeast coast of the island of O\u02bbahu. The population of Honolulu was 350,964 at the 2020 census, dropping to an estimated 341,868 by 2025. The Urban Honolulu metropolitan area had an estimated population of just under 1 million residents in 2024 and is the 56th...",
+    "latitude": 21.3,
+    "longitude": -157.85,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "International",
+    "state": "Hawaii",
+    "locality": [
+      "Honolulu"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Honolulu"
+  },
+  {
+    "name": "Waimea River (O\u02bbahu)",
+    "text_content": "The Waimea River is a river in Honolulu County on the island of O\u02bbahu in the U.S. state of Hawaii. The river's main channel is 1.5 miles (2.4 km) long and has a watershed spanning 13.6 square miles, with a total length of 24.4 km (15.2 mi) when its tributaries are included. It is formed by the confluence of the Kamananui stream and the Kaiwiko\u02bbele stream northeast of Haleiwa and flows northwest through the Waimea Valley to the Pacific Ocean at Waimea Bay. The name Waimea translates to \"red water...",
+    "latitude": 21.64074,
+    "longitude": -158.06324,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing",
+      "chill"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "International",
+    "state": "Hawaii",
+    "locality": [
+      "Honolulu"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Waimea_River_(O%CA%BBahu)"
+  },
+  {
+    "name": "Northern Beaches",
+    "text_content": "The Northern Beaches is a region within Northern Sydney, in the state of New South Wales, Australia, near the Pacific coast. This area extends south to the entrance of Port Jackson (Sydney Harbour), west to Middle Harbour and north to the entrance of Broken Bay. The area was formerly inhabited by the Garigal or Caregal people in a region known as Guringai country.\nThe Northern Beaches district is governed on a local level by the Northern Beaches Council, which was formed in May 2016 from Warring...",
+    "latitude": -33.609,
+    "longitude": 151.328,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Northern_Beaches"
+  },
+  {
+    "name": "Shell Beach (Western Australia)",
+    "text_content": "Shell Beach is a beach in the Shark Bay region of Western Australia, located 45 kilometres (28 mi) south-east of Denham.\nSituated on the northeastern side of the Taillefer Isthmus along the L'Haridon Bight, the beach is covered with shells for a 60-kilometre (37 mi) stretch to a depth of 7\u201310 metres (23\u201333 ft). It is one of only two beaches in the world made entirely from shells.\nThe beach was named Shell Beach because of the great abundance of the shells of the cockle species Fragum erugatum. T...",
+    "latitude": -26.21081,
+    "longitude": 113.76428,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "Western Australia",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Shell_Beach_(Western_Australia)"
+  },
+  {
+    "name": "Sellicks Beach, South Australia",
+    "text_content": "Sellicks Beach, formerly spelt Sellick's Beach, is a suburb in the Australian state of South Australia located within  Adelaide metropolitan area  about  47 kilometres (29 mi) from the Adelaide city centre. It is an outer southern suburb of Adelaide and is located in the local government area of the City of Onkaparinga at the southern boundary of the metropolitan area. It is known as Witawali or Witawodli by the traditional owners, the Kaurna people, and is of significance as being the site of a...",
+    "latitude": -35.32937143,
+    "longitude": 138.45862937,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "South Australia",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Sellicks_Beach,_South_Australia"
+  },
+  {
+    "name": "South Australia",
+    "text_content": "South Australia (commonly abbreviated as SA) is a state in the southern central part of Australia. With a total land area of 984,314 square kilometres (380,046 sq mi), it is the fourth-largest of Australia's states and territories by area, which includes some of the most arid parts of the continent. It is the 17th-largest subdivision in the world and the fifth-largest in Australasia. It is the second-most highly centralised state in the nation after Western Australia, with more than 67% of the 1...",
+    "latitude": -30.0,
+    "longitude": 135.0,
+    "place_of_interests": [
+      "beach",
+      "sunset",
+      "wine",
+      "pub"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "Western Australia",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/South_Australia"
+  },
+  {
+    "name": "Bondi Junction",
+    "text_content": "Bondi Junction is an eastern suburb of Sydney, in the state of New South Wales, Australia. It is 6 kilometres east of the Sydney central business district and is part of the local government area of Waverley.\nBondi Junction is a largely commercial area which has undergone many changes since the late 20th century. There have been many major commercial and residential developments around the main street and surrounding area, notably a new bus/rail interchange and large shopping mall. Many of the o...",
+    "latitude": -33.89145,
+    "longitude": 151.2497,
+    "place_of_interests": [
+      "beach"
+    ],
+    "vibe": [
+      "relaxing",
+      "vacation"
+    ],
+    "place_of_activites": [
+      "seeing the sunset",
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Bondi_Junction"
+  },
+  {
+    "name": "North Bondi",
+    "text_content": "North Bondi is a coastal, eastern suburb of Sydney, in the state of New South Wales, Australia 7 kilometres east of the Sydney central business district, in the local government area of Waverley Council.\nNorth Bondi is a mostly residential area bordering Bondi Beach and the suburb of Bondi, as well as Bondi Junction, the commercial centre. Ben Buckler is a locality in North Bondi.",
+    "latitude": -33.88777778,
+    "longitude": 151.28083333,
+    "place_of_interests": [
+      "beach"
+    ],
+    "vibe": [
+      "relaxing",
+      "vacation"
+    ],
+    "place_of_activites": [
+      "seeing the sunset",
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/North_Bondi"
+  },
+  {
+    "name": "Bondi Pavilion",
+    "text_content": "The Bondi Surf Pavilion is a beachside banqueting house in Bondi Beach, an eastern suburb of Sydney, New South Wales, Australia. It is an outstanding beach cultural icon of Australia, together with the beach, park and surf lifesaving club. The structure is listed on the NSW State Heritage Register 01786 as well as by Waverley Council.  The building has also been listed by the Heritage Council. According to the National Trust it \"has come to represent the Australian culture of beach bathing and o...",
+    "latitude": -33.89017778,
+    "longitude": 151.27708611,
+    "place_of_interests": [
+      "beach"
+    ],
+    "vibe": [
+      "relaxing",
+      "vacation"
+    ],
+    "place_of_activites": [
+      "seeing the sunset",
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Bondi_Pavilion"
+  },
+  {
+    "name": "Manly Beach",
+    "text_content": "Manly Beach is a beach situated among the Northern Beaches of Sydney, Australia. From north to south, the three main sections are Queenscliff, North Steyne and South Steyne.",
+    "latitude": -33.7897,
+    "longitude": 151.2878,
+    "place_of_interests": [
+      "beach"
+    ],
+    "vibe": [
+      "relaxing",
+      "vacation"
+    ],
+    "place_of_activites": [
+      "seeing the sunset",
+      "drinking wine",
+      "going to a pub"
+    ],
+    "country": "Australia",
+    "state": "",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Manly_Beach"
+  },
+  {
+    "name": "Hawai\u02bbi (island)",
+    "text_content": "Hawai\u02bbi, sometimes written Hawaii, is the largest island in the United States, located in the state of Hawaii. It is the southeasternmost of the Hawaiian Islands, a chain of volcanic islands in the North Pacific Ocean. With an area of 4,028 square miles (10,430 km2), it has 63% of the Hawaiian archipelago's combined landmass. However, it has only 13% of the archipelago's population. The island of Hawai\u02bbi is the third largest island in Polynesia, behind the North and South Islands of New Zealand....",
+    "latitude": 19.6,
+    "longitude": -155.5,
+    "place_of_interests": [
+      "mountain",
+      "waterfall"
+    ],
+    "vibe": [
+      "adventure",
+      "vacation"
+    ],
+    "place_of_activites": [
+      "trekking",
+      "hiking",
+      "showering"
+    ],
+    "country": "United States",
+    "state": "Hawaii",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Hawai%CA%BBi_(island)"
+  },
+  {
+    "name": "Sunset Mountains (Arizona)",
+    "text_content": "The Sunset Mountains in Coconino County, Arizona, are two small mesas called East Sunset Mountain and West Sunset Mountain, standing southeast of Winslow and surrounding a stretch of State Route 87. They are unrelated to Sunset Mountain near Scottsdale, far south.",
+    "latitude": 34.8408557,
+    "longitude": -110.8998581,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Sunset_Mountains_(Arizona)"
+  },
+  {
+    "name": "Camp Mountain, Queensland",
+    "text_content": "Camp Mountain is a rural locality in the City of Moreton Bay, Queensland, Australia. In the 2021 census, Camp Mountain had a population of 1,447 people.",
+    "latitude": -27.3977,
+    "longitude": 152.8755,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "Queensland",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Camp_Mountain,_Queensland"
+  },
+  {
+    "name": "Philmont Scout Ranch",
+    "text_content": "Philmont Scout Ranch is a ranch located in Colfax County, New Mexico, United States, near the village of Cimarron. Donated by oil baron Waite Phillips, the ranch is owned by Scouting America. It is a high adventure base where crews of Scouts and Venturers take part in backpacking treks and other outdoor activities. The ranch covers nearly 220 square miles (570 km2) of wilderness in the Sangre de Cristo range of the Rocky Mountains.\nIt is the largest youth camp in the world.\nPhilmont is also home...",
+    "latitude": 36.45416667,
+    "longitude": -104.95583333,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "United States",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Philmont_Scout_Ranch"
+  },
+  {
+    "name": "Lookout Mountain",
+    "text_content": "Lookout Mountain is a mountain ridge at the northwest corner of the U.S. state of Georgia, the northeast corner of Alabama, and along the southeastern Tennessee state line in Chattanooga.  Lookout Mountain was the scene of the 18th-century \"Last Battle of the Cherokees\" in this area during the Nickajack Expedition. On November 24, 1863, during the American Civil War, the Battle of Lookout Mountain took place here.",
+    "latitude": 34.86371278,
+    "longitude": -85.3924527,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Lookout_Mountain"
+  },
+  {
+    "name": "Conway Summit",
+    "text_content": "Conway Summit (el. 8,143 feet (2,482 m)) is a mountain pass in Mono County, California. It is traversed by U.S. Highway 395, which connects Bridgeport and the East Walker River on the north side of the pass to Mono Lake and Lee Vining to the south. It marks the highest point on U.S. 395, which also traverses high passes at Deadman Summit and Devil's Gate Pass.\nConway Summit is named after John Andrew Conway, a settler in the area in 1880. Geographically, it was formed from an upland plateau by t...",
+    "latitude": 38.08805556,
+    "longitude": -119.18194444,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "California",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Conway_Summit"
+  },
+  {
+    "name": "Sugarloaf Mountain (South Carolina)",
+    "text_content": "Sugarloaf Mountain is an unusual hill located in Patrick, South Carolina. Its elevation is 100 feet higher than the surrounding area.  This site is located within the Sand Hills State Forest, adjacent to U.S. Highway 1, in the Carolina Sandhills region of the Atlantic Coastal Plain.",
+    "latitude": 34.58805556,
+    "longitude": -80.11916667,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Sugarloaf_Mountain_(South_Carolina)"
+  },
+  {
+    "name": "Blue Mountains (New South Wales)",
+    "text_content": "The Blue Mountains (Gundungurra/Dharug: Colomatta or Gulumada) are a mountainous region and a mountain range located in New South Wales, Australia. The region is considered to be part of the western outskirts of the Greater Sydney area. The region borders on Sydney's main metropolitan area, its foothills starting about 50 kilometres (31 mi) west of centre of the state capital, close to Penrith. The public's understanding of the extent of the Blue Mountains is varied, as it forms only part of an ...",
+    "latitude": -33.6,
+    "longitude": 150.35,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [
+      "Sydney"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Blue_Mountains_(New_South_Wales)"
+  },
+  {
+    "name": "Dragon New Warm Mountain I Believe in You",
+    "text_content": "Dragon New Warm Mountain I Believe in You is the fifth studio album by the American band Big Thief, released as a double album through 4AD on February 11, 2022. Produced by drummer James Krivchenia, the album features 20 songs which were recorded over five months in five locations across the United States. The album was supported by six singles. It is also the last album to feature bassist and founding member Max Oleartchik before his departure in 2024.\nIt received universal acclaim from critics...",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "United States",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Dragon_New_Warm_Mountain_I_Believe_in_You"
+  },
+  {
+    "name": "James Krivchenia",
+    "text_content": "James Foster Krivchenia (born December 8, 1988) is an American musician and producer, best known as the drummer of the indie rock band Big Thief. Krivchenia joined Big Thief in 2015 following his work with the band as a sound engineer. He later produced the band's fifth studio album, Dragon New Warm Mountain I Believe In You (2022), which received a nomination for Best Alternative Music Album at the 65th Annual Grammy Awards.\nIn addition to his work with Big Thief, he is a regular collaborator o...",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/James_Krivchenia"
+  },
+  {
+    "name": "Mount Ossa (Tasmania)",
+    "text_content": "Mount Ossa is the highest mountain in Tasmania, with a summit elevation of 1,617 metres (5,305 ft) above sea level. It makes up part of the Pelion Range within Cradle Mountain-Lake St Clair National Park in the Central Highlands region of Tasmania, Australia.\nIt was first surveyed by Europeans in the 1860s, and confirmed to be the state's high point in 1954.\nLike most peaks in the area it is capped with Jurassic dolerite.",
+    "latitude": -41.87,
+    "longitude": 146.03,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "Tasmania",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Mount_Ossa_(Tasmania)"
+  },
+  {
+    "name": "Snowy Mountains",
+    "text_content": "The Snowy Mountains, known informally as \"The Snowies\", is an IBRA subregion in southern New South Wales, Australia, and is the tallest mountain range in mainland Australia, being part of the continent's Great Dividing Range, a cordillera system.  It makes up the northeastern half of the Australian Alps (the other half being the Victorian Alps) and contains Australia's five tallest peaks, all of which are above 2,100 m (6,890 ft), including the tallest Mount Kosciuszko, which reaches to a height...",
+    "latitude": -36.5,
+    "longitude": 148.33333333,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Snowy_Mountains"
+  },
+  {
+    "name": "Camp John Hay",
+    "text_content": "Camp John Hay is a mixed-used development which serves as a tourist destination and forest watershed reservation in Baguio, Philippines which was formerly a military base of the United States Armed Forces.",
+    "latitude": 16.398912,
+    "longitude": 120.609463,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "United States",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Camp_John_Hay"
+  },
+  {
+    "name": "Guantanamo Bay detention camp",
+    "text_content": "The Guantanamo Bay detention camp is a United States military prison within Naval Station Guantanamo Bay (NSGB), on the coast of Guantnamo Bay, Cuba. It was established in 2002 by President George W. Bush to hold terrorism suspects and \"illegal enemy combatants\" during the war on terror following the September 11 attacks. As of January 2025, at least 780 people from 48 countries have been detained at the camp since its creation, of whom 756 had been released or transferred to other detention fac...",
+    "latitude": 19.9025,
+    "longitude": -75.1,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "United States",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Guantanamo_Bay_detention_camp"
+  },
+  {
+    "name": "Twain (musician)",
+    "text_content": "Mat Davidson, better known by his stage name Twain, is an American alternative country musician from Marin County. Davidson has released five full-length albums as Twain. Davidson is a former member of the bands the Low Anthem and Spirit Family Reunion.\n\n",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Twain_(musician)"
+  },
+  {
+    "name": "Big Thief",
+    "text_content": "Big Thief is an American indie folk band formed in Brooklyn, New York, in 2015. The line-up comprises two founding members: vocalist-guitarist Adrianne Lenker, and guitarist Buck Meek. Drummer James Krivchenia, replaced founding drummer Jason Burger after the release of their debut album. Founding bassist Max Oleartchik left the band in June 2024, with Joshua Crumbly now playing bass for live performances.\nBig Thief's debut album, Masterpiece, was released on Saddle Creek Records in 2016. Their ...",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [
+      "New York"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Big_Thief"
+  },
+  {
+    "name": "Black Mountain (Australian Capital Territory)",
+    "text_content": "Black Mountain is a small mountain with an elevation of 812 metres (2,664 ft) AHD that is situated to the west of the Canberra central business district on the northern shore of Lake Burley Griffin, in the Australian Capital Territory of Australia. Black Mountain is protected from development by its Canberra Nature Park status and is predominantly covered in native bushland serving as a haven to native wildlife.",
+    "latitude": -35.26666667,
+    "longitude": 149.1,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Black_Mountain_(Australian_Capital_Territory)"
+  },
+  {
+    "name": "Turbo Mountain",
+    "text_content": "Turbo Mountain was a steel roller coaster at Adventure World in Perth, Western Australia, Australia. The ride was closed and removed in 2009 to make room for a HUSS Shot'N Drop tower named Freefall. The ride was originally located in Luna Park Sydney as a standard Schwarzkopf Jet Star 2 bought second hand. When the ride was moved to Adventure World in 1991, the ride's lift hill was modified from a spiral lift hill to a standard chain lift hill due to maintenance.",
+    "latitude": -32.094757,
+    "longitude": 115.81642,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "Western Australia",
+    "locality": [
+      "Sydney",
+      "Perth"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Turbo_Mountain"
+  },
+  {
+    "name": "Mount Kosciuszko",
+    "text_content": "Mount Kosciuszko ( KOZ-ee-USK-oh; Polish pronunciation: [ktu.k] kosh-CHOOSH-koh; Ngarigo: Kunama Namadgi) is the highest mountain of mainland Australia, at 2,228 metres (7,310 ft) above sea level. It is located on the Main Range of the Snowy Mountains in Kosciuszko National Park, a part of the Australian Alps National Parks and Reserves, in New South Wales, and is located west of Crackenback and close to Jindabyne, near the border with Victoria. Mount Kosciuszko is ranked 35th by topographic iso...",
+    "latitude": -36.45583333,
+    "longitude": 148.26361111,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "New South Wales",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Mount_Kosciuszko"
+  },
+  {
+    "name": "Mountain ranges of Australia",
+    "text_content": "This is a list of mountain ranges, including ranges of hills, that occur in Australia.",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "warm"
+    ],
+    "place_of_activites": [
+      "sunset",
+      "camping",
+      "camp"
+    ],
+    "country": "Australia",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Mountain_ranges_of_Australia"
+  },
+  {
+    "name": "Catoctin Mountain Park",
+    "text_content": "Catoctin Mountain Park is a park located in part of the Monocacy Valley and Catoctin Mountain ridgerange that forms the northeastern rampart of the Blue Ridge Mountains, in  the Appalachian Mountains System. The park is approximately 5120 acres or 8 square miles (21 km2) in area.\nCatoctin Mountain Park is managed by the National Park Service, and lies north of and directly adjacent to the similarly sized Cunningham Falls State Park.",
+    "latitude": 39.63444444,
+    "longitude": -77.45,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Catoctin_Mountain_Park"
+  },
+  {
+    "name": "Wilsons Promontory National Park",
+    "text_content": "The Wilsons Promontory National Park, commonly known as Wilsons Prom or The Prom, is a national park in the Gippsland region of Victoria, Australia, located approximately 157 kilometres (98 mi) southeast of Melbourne. The national park covers the southern portion of Wilsons Promontory, a peninsula containing South Point, the southernmost point on the Australian mainland, and a number of islands.\nThe 50,500-hectare (125,000-acre) national park is the southernmost national park on mainland Austral...",
+    "latitude": -39.01333333,
+    "longitude": 146.39361111,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "Australia",
+    "state": "Victoria",
+    "locality": [
+      "Melbourne"
+    ],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Wilsons_Promontory_National_Park"
+  },
+  {
+    "name": "Kruger National Park",
+    "text_content": "Kruger National Park (Afrikaans: [kry.(j)r]) is a national park in South Africa covering an area of 19,623 km2 (7,576 sq mi) in the provinces of Limpopo and Mpumalanga in the country's northeast. It extends 360 km (220 mi) from north to south and 65 km (40 mi) from east to west. The administrative headquarters are in Skukuza. Areas of the park were first protected by the government of the South African Republic in 1898, and it became South Africa's first national park in 1926. It is part of Krug...",
+    "latitude": -24.0,
+    "longitude": 31.5,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Kruger_National_Park"
+  },
+  {
+    "name": "Scenic Rim Region",
+    "text_content": "The Scenic Rim Region is a local government area (LGA) in the West Moreton region of South East Queensland, Australia. Established in 2008, it was preceded by several previous local government areas with histories extending back to the early 1900s and beyond. The main town of the region is Beaudesert.\nIt has an estimated operating budget of A$33 million.\nIn the 2021 census, the Scenic Rim Region had a population of 42,984 people.",
+    "latitude": -27.9875,
+    "longitude": 152.99527778,
+    "place_of_interests": [
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "Australia",
+    "state": "Queensland",
+    "locality": [],
+    "image_url": "",
+    "source_url": "https://en.wikipedia.org/wiki/Scenic_Rim_Region"
+  }
+]

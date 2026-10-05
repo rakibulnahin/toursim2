@@ -103,6 +103,101 @@ class DatabaseAgent:
                 return False
         return True
 
+    def insert_places(self, new_places: list) -> int:
+        """
+        Inserts and indexes newly discovered places from SearchAgent into ChromaDB
+        and appends them to chroma_sample.json for persistent future use.
+        """
+        if not new_places:
+            return 0
+
+        # Load existing names from chroma_sample.json to avoid duplicates
+        sample_path = "chroma_sample.json"
+        existing_places = []
+        if os.path.exists(sample_path):
+            try:
+                with open(sample_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    existing_places = data if isinstance(data, list) else [data]
+            except Exception:
+                existing_places = []
+
+        existing_names = {p.get("name", "").strip().lower() for p in existing_places if isinstance(p, dict)}
+
+        from llama_index.core import Document
+        added_count = 0
+
+        for place in new_places:
+            name = place.get("name", "").strip()
+            if not name or name.lower() in existing_names:
+                continue
+
+            vibe_str = ", ".join(place.get("vibe", [])) if isinstance(place.get("vibe"), list) else str(place.get("vibe", ""))
+            interests_str = ", ".join(place.get("place_of_interests", [])) if isinstance(place.get("place_of_interests"), list) else str(place.get("place_of_interests", ""))
+            activities_str = ", ".join(place.get("place_of_activites", [])) if isinstance(place.get("place_of_activites"), list) else str(place.get("place_of_activites", ""))
+            locality_str = ", ".join(place.get("locality", [])) if isinstance(place.get("locality"), list) else str(place.get("locality", ""))
+
+            text_payload = (
+                f"Place Name: {name}\n"
+                f"Description: {place.get('text_content', '')}\n"
+                f"Country: {place.get('country', '')}, State: {place.get('state', '')}, Locality: {locality_str}\n"
+                f"Vibe: {vibe_str}\n"
+                f"Points of Interest: {interests_str}\n"
+                f"Activities: {activities_str}"
+            )
+
+            # Clean place object for serialization
+            clean_place = {
+                "name": name,
+                "text_content": place.get("text_content", ""),
+                "latitude": float(place.get("latitude", 0.0)),
+                "longitude": float(place.get("longitude", 0.0)),
+                "place_of_interests": place.get("place_of_interests", []),
+                "vibe": place.get("vibe", []),
+                "place_of_activites": place.get("place_of_activites", []),
+                "country": place.get("country", "International"),
+                "state": place.get("state", ""),
+                "locality": place.get("locality", []),
+                "image_url": place.get("image_url", ""),
+                "source_url": place.get("source_url", "")
+            }
+
+            doc = Document(
+                text=text_payload,
+                metadata={
+                    "name": name,
+                    "country": clean_place["country"],
+                    "state": clean_place["state"],
+                    "locality": locality_str,
+                    "vibe": vibe_str,
+                    "place_of_interests": interests_str,
+                    "place_of_activites": activities_str,
+                    "latitude": clean_place["latitude"],
+                    "longitude": clean_place["longitude"],
+                    "image_url": clean_place["image_url"],
+                    "raw_json": json.dumps(clean_place)
+                }
+            )
+
+            try:
+                self.index.insert(doc)
+                existing_places.append(clean_place)
+                existing_names.add(name.lower())
+                added_count += 1
+            except Exception as e:
+                print(f"[DatabaseAgent] Notice: Could not insert '{name}' into Chroma index: {e}")
+
+        # Persist updated place list back to chroma_sample.json
+        if added_count > 0:
+            try:
+                with open(sample_path, "w", encoding="utf-8") as f:
+                    json.dump(existing_places, f, indent=2)
+                print(f"[DatabaseAgent] Successfully saved {added_count} new destination(s) into ChromaDB & '{sample_path}' for future queries!", flush=True)
+            except Exception as e:
+                print(f"[DatabaseAgent] Notice: Could not update '{sample_path}': {e}")
+
+        return added_count
+
 if __name__ == "__main__":
     agent = DatabaseAgent()
     sample_prefs = {
