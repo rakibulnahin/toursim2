@@ -70,6 +70,23 @@ class ChatResponse(BaseModel):
     source: str
     formatted_text: str
 
+class ConversationChatRequest(BaseModel):
+    session_id: Optional[str] = None
+    message: str
+    target_count: Optional[int] = 6
+
+class ConversationChatResponse(BaseModel):
+    session_id: str
+    success: bool
+    user_query: str
+    assistant_message: str
+    places: List[DestinationPlace]
+    total_places: int
+    cumulative_preferences: Dict[str, Any]
+    is_dissatisfied: bool
+    strict_conjunction: bool
+    history_turns: int
+
 @app.on_event("startup")
 async def startup_event():
     # Warm up orchestrator on start
@@ -82,6 +99,8 @@ def read_root():
         "service": "VoyageAI Multi-Agent Tourism Recommendation API",
         "endpoints": {
             "chat": "POST /api/chat",
+            "conversation_chat": "POST /api/chat/conversation",
+            "session_reset": "POST /api/chat/session/reset",
             "sample_places": "GET /api/places",
             "health": "GET /api/health"
         }
@@ -107,6 +126,30 @@ def chat_with_agent(req: ChatRequest):
     except Exception as e:
         print(f"[FastAPI] Error processing request: {e}", flush=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/chat/conversation", response_model=ConversationChatResponse)
+def conversation_turn(req: ConversationChatRequest):
+    query = req.message.strip()
+    if not query:
+        raise HTTPException(status_code=400, detail="Query message cannot be empty.")
+    
+    agent = get_orchestrator()
+    try:
+        result = agent.process_conversational_turn(
+            user_input=query,
+            session_id=req.session_id,
+            target_count=req.target_count or 6
+        )
+        return result
+    except Exception as e:
+        print(f"[FastAPI] Error in conversational turn: {e}", flush=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/chat/session/reset")
+def reset_conversation_session(session_id: str):
+    from backend.session_manager import session_manager
+    success = session_manager.reset_session(session_id)
+    return {"success": success, "session_id": session_id, "message": "Session reset successfully."}
 
 @app.get("/api/places")
 def get_cached_places():

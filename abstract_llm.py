@@ -30,7 +30,9 @@ class AbstractLLM:
             print(f"[AbstractLLM] Failed to initialize: {e}")
             self.llm = None
 
-    def call_llm(self, SYSTEM_PROMPT, USER_PROMPT):
+    def call_llm(self, SYSTEM_PROMPT, USER_PROMPT, max_tokens=512):
+        if self.llm is None:
+            raise RuntimeError("LLM is not initialized")
         return self.llm.create_chat_completion(
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
@@ -38,4 +40,5 @@ class AbstractLLM:
             ],
             response_format={"type": "json_object"},
             temperature=0.1,
+            max_tokens=max_tokens,
         )

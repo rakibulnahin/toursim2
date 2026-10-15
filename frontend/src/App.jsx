@@ -13,9 +13,12 @@ import {
   Layers,
   Heart,
   X,
-  Info
+  Info,
+  Bot,
+  MessageSquare
 } from "lucide-react";
 import "./App.css";
+import ChatbotView from "./components/ChatbotView";
 
 const API_BASE_URL = "http://127.0.0.1:8000";
 
@@ -26,14 +29,19 @@ const PRESET_QUERIES = [
   { label: "🍱 Cultural & Foodie Sightseeing", query: "Cultural holiday with temples, famous cuisine, vibrant city life, and historic walking tours in Japan" }
 ];
 
-const DEFAULT_IMAGE_FALLBACKS = [
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80"
-];
+import imageNotFound from "./assets/Image_not_found.jpg";
+
+const DEFAULT_IMAGE_FALLBACK = imageNotFound;
 
 function App() {
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem("voyage_active_tab") || "search";
+    } catch {
+      return "search";
+    }
+  });
+
   const [query, setQuery] = useState(() => {
     try {
       return localStorage.getItem("voyage_query") || "";
@@ -75,6 +83,12 @@ function App() {
   });
 
   const [serverOnline, setServerOnline] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("voyage_active_tab", activeTab);
+    } catch (e) {}
+  }, [activeTab]);
 
   // Sync state to localStorage to survive browser tab sleep/refresh
   useEffect(() => {
@@ -164,8 +178,8 @@ function App() {
     }
   };
 
-  const getRandomFallback = (index) => {
-    return DEFAULT_IMAGE_FALLBACKS[index % DEFAULT_IMAGE_FALLBACKS.length];
+  const getRandomFallback = () => {
+    return DEFAULT_IMAGE_FALLBACK;
   };
 
   return (
@@ -182,6 +196,22 @@ function App() {
           </div>
         </div>
 
+        {/* View Mode Switcher */}
+        <div className="header-nav-tabs">
+          <button
+            className={`nav-tab-btn ${activeTab === "search" ? "active" : ""}`}
+            onClick={() => setActiveTab("search")}
+          >
+            <Search size={16} /> Discovery Search
+          </button>
+          <button
+            className={`nav-tab-btn ${activeTab === "chat" ? "active" : ""}`}
+            onClick={() => setActiveTab("chat")}
+          >
+            <Bot size={16} /> Travel Consultant Chat
+          </button>
+        </div>
+
         <div className="header-actions">
           <div className="status-badge">
             <span className={`status-dot ${serverOnline ? "" : "pulse-badge"}`} style={{ background: serverOnline ? "#10b981" : "#f43f5e" }} />
@@ -190,14 +220,22 @@ function App() {
         </div>
       </header>
 
-      {/* Hero Section & Query Box */}
-      <section className="hero-section">
-        <div className="hero-tag">
-          <Sparkles size={14} /> Multi-Agent LLM + Chroma Vector Search
-        </div>
-        <h2 className="hero-title">
-          Where does your next <span className="gradient-text">adventure</span> lead?
-        </h2>
+      {/* RENDER ACTIVE VIEW */}
+      {activeTab === "chat" ? (
+        <ChatbotView
+          onSelectPlace={setSelectedPlace}
+          getRandomFallback={getRandomFallback}
+        />
+      ) : (
+        <>
+          {/* Hero Section & Query Box */}
+          <section className="hero-section">
+            <div className="hero-tag">
+              <Sparkles size={14} /> Multi-Agent LLM + Chroma Vector Search
+            </div>
+            <h2 className="hero-title">
+              Where does your next <span className="gradient-text">adventure</span> lead?
+            </h2>
         <p className="hero-subtitle">
           Talk naturally. Our agents extract your exact travel preferences, query the local vector database, and discover global destinations.
         </p>
@@ -388,16 +426,29 @@ function App() {
                     <h3 className="card-title">{place.name}</h3>
 
                     {/* Coordinates */}
-                    {(place.latitude !== 0 || place.longitude !== 0) && (
+                    {place.latitude && place.longitude && (place.latitude !== 0 || place.longitude !== 0) ? (
                       <a
                         href={`https://www.google.com/maps?q=${place.latitude},${place.longitude}`}
                         target="_blank"
                         rel="noreferrer"
                         className="coord-tag"
-                        title="View on Google Maps"
+                        title="View exact GPS coordinates on Google Maps"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <Globe size={12} />
-                        Lat {place.latitude?.toFixed(3)}, Lon {place.longitude?.toFixed(3)}
+                        Lat {Number(place.latitude).toFixed(3)}, Lon {Number(place.longitude).toFixed(3)}
+                      </a>
+                    ) : (
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name} ${place.locality || ''} ${place.state || ''} ${place.country || ''}`.trim())}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="coord-tag"
+                        title="Search location on Google Maps"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Globe size={12} />
+                        Explore on Google Maps
                       </a>
                     )}
 
@@ -448,6 +499,8 @@ function App() {
           </div>
         </section>
       )}
+      </>
+      )}
 
       {/* Details Modal Drawer */}
       {selectedPlace && (
@@ -475,11 +528,36 @@ function App() {
               <h2 style={{ fontFamily: "var(--font-heading)", fontSize: "1.6rem", marginBottom: "6px" }}>
                 {selectedPlace.name}
               </h2>
-              <div style={{ color: "var(--accent-cyan)", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "6px" }}>
+              <div style={{ color: "var(--accent-cyan)", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
                 <MapPin size={15} />
-                {selectedPlace.country}
-                {selectedPlace.state ? `, ${selectedPlace.state}` : ""}
-                {selectedPlace.locality ? ` (${Array.isArray(selectedPlace.locality) ? selectedPlace.locality.join(", ") : selectedPlace.locality})` : ""}
+                <span>
+                  {selectedPlace.country}
+                  {selectedPlace.state ? `, ${selectedPlace.state}` : ""}
+                  {selectedPlace.locality ? ` (${Array.isArray(selectedPlace.locality) ? selectedPlace.locality.join(", ") : selectedPlace.locality})` : ""}
+                </span>
+                {selectedPlace.latitude && selectedPlace.longitude && (selectedPlace.latitude !== 0 || selectedPlace.longitude !== 0) ? (
+                  <a
+                    href={`https://www.google.com/maps?q=${selectedPlace.latitude},${selectedPlace.longitude}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="coord-tag"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    <Globe size={12} />
+                    GPS: {Number(selectedPlace.latitude).toFixed(4)}, {Number(selectedPlace.longitude).toFixed(4)}
+                  </a>
+                ) : (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${selectedPlace.name} ${selectedPlace.locality || ''} ${selectedPlace.state || ''} ${selectedPlace.country || ''}`.trim())}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="coord-tag"
+                    style={{ marginLeft: "8px" }}
+                  >
+                    <Globe size={12} />
+                    Open in Google Maps
+                  </a>
+                )}
               </div>
             </div>
 

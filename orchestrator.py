@@ -5,7 +5,13 @@ from extractor import PreferenceExtractor
 from database_agent import DatabaseAgent
 from search_agent import SearchAgent
 from abstract_llm import AbstractLLM
-from prompts import VALIDATOR_SYSTEM_PROMPT, build_validation_user_prompt
+from prompts import (
+    VALIDATOR_SYSTEM_PROMPT,
+    build_validation_user_prompt,
+    CONVERSATION_VALIDATOR_SYSTEM_PROMPT,
+    build_conversation_validation_user_prompt,
+    CONVERSATION_ASSISTANT_SYSTEM_PROMPT
+)
 
 
 class OrchestratorAgent:
@@ -30,12 +36,13 @@ class OrchestratorAgent:
         self.search_agent = SearchAgent(llm=self.llm)
         print("[Orchestrator] Ready to serve tourism requests!")
 
-    def check_validity(self, place_results: list, preferences: dict, user_input: str, min_confidence: float = 0.75) -> tuple[bool, list]:
+    def check_validity(self, place_results: list, preferences: dict, user_input: str, min_confidence: float = 0.75, dialogue_history: list = None) -> tuple[bool, list]:
         """
-        Fast Heuristic Pre-Filtering + Consolidated LLM Validation:
+        Fast Heuristic Pre-Filtering + Consolidated Semantic LLM Validation (Problem 5):
         1. Instantly scores all candidates using heuristic rules (<1ms). Discards severe mismatches (score < 0.40).
-        2. Validates only the top promising candidates in a single consolidated LLM call (instead of multiple slow loops).
-        3. Enforces confidence >= min_confidence.
+        2. Validates top promising candidates in a single consolidated LLM call considering the ENTIRE conversation history.
+        3. Only results that pass BOTH heuristic matching + semantic LLM validation are passed along.
+        4. Provides a personalized short description (reason) for why the destination was suggested.
         """
         if not place_results:
             return False, []
@@ -65,8 +72,8 @@ class OrchestratorAgent:
         # Sort promising candidates by heuristic score descending
         scored_candidates.sort(key=lambda x: x[1].get("heuristic_score", 0.0), reverse=True)
 
-        # Step 2: Validate the top candidates in a SINGLE consolidated LLM call (max 8 candidates)
-        top_candidates = scored_candidates[:8]
+        # Step 2: Validate the top candidates in a SINGLE consolidated LLM call (max 6 candidates)
+        top_candidates = scored_candidates[:6]
         evaluations = []
 
         if self.llm and self.llm.llm is not None:
@@ -78,16 +85,23 @@ class OrchestratorAgent:
                     "place_of_interests": p.get("place_of_interests", []),
                     "vibe": p.get("vibe", []),
                     "place_of_activites": p.get("place_of_activites", []),
-                    "summary": str(p.get("text_content", ""))[:140]
+                    "summary": str(p.get("text_content", ""))[:280]
                 }
                 for orig_idx, p in top_candidates
             ]
 
-            user_prompt = build_validation_user_prompt(candidates_payload, preferences, user_input)
-            print(f"[Orchestrator] Sending single consolidated batch of {len(candidates_payload)} candidate(s) to LLM...", flush=True)
+            if dialogue_history:
+                # Multi-Turn Conversational Semantic Validation (evaluates against full conversation history!)
+                user_prompt = build_conversation_validation_user_prompt(candidates_payload, preferences, dialogue_history, user_input)
+                sys_prompt = CONVERSATION_VALIDATOR_SYSTEM_PROMPT
+                print(f"[Orchestrator] Performing Multi-Turn Semantic LLM Validation across entire dialogue history for {len(candidates_payload)} candidates...", flush=True)
+            else:
+                user_prompt = build_validation_user_prompt(candidates_payload, preferences, user_input)
+                sys_prompt = VALIDATOR_SYSTEM_PROMPT
+                print(f"[Orchestrator] Sending single consolidated batch of {len(candidates_payload)} candidate(s) to LLM...", flush=True)
 
             try:
-                response = self.llm.call_llm(VALIDATOR_SYSTEM_PROMPT, user_prompt)
+                response = self.llm.call_llm(sys_prompt, user_prompt, max_tokens=650)
                 raw_content = response["choices"][0]["message"]["content"]
                 parsed = json.loads(raw_content)
                 evaluations = parsed.get("evaluations", []) if isinstance(parsed, dict) else (parsed if isinstance(parsed, list) else [])
@@ -267,9 +281,178 @@ class OrchestratorAgent:
                 lines.append(f"   Match Details: {self._clean_ascii(str(place.get('evaluation_reason')))}")
             if place.get("image_url"):
                 lines.append(f"   Image: {place.get('image_url')}")
-            if place.get("source_url"):
-                lines.append(f"   Source URL: {place.get('source_url')}")
         return "\n".join(lines)
+
+    def _generate_assistant_reply(self, user_input: str, places: list, preferences: dict, is_dissatisfied: bool, strict_conjunction: bool) -> str:
+        """
+        Generates a warm, natural assistant conversational reply for the user.
+        """
+        from prompts import CONVERSATION_ASSISTANT_SYSTEM_PROMPT
+
+        if not places:
+            loc = ", ".join(preferences.get("country_names", [])) or "that area"
+            return f"I explored our database and web sources for {loc}, but couldn't find destinations matching all those specific criteria. Would you like to adjust the activities or try a nearby region?"
+
+        # If LLM is active, synthesize custom response
+        if self.llm is not None and getattr(self.llm, "llm", None) is not None:
+            try:
+                prompt_payload = json.dumps({
+                    "user_message": user_input,
+                    "curated_places_count": len(places),
+                    "sample_places": [p.get("name") for p in places[:3]],
+                    "cumulative_preferences": preferences,
+                    "strict_conjunction": strict_conjunction,
+                    "is_dissatisfied": is_dissatisfied
+                }, indent=2)
+                resp = self.llm.call_llm(CONVERSATION_ASSISTANT_SYSTEM_PROMPT, prompt_payload)
+                msg_content = resp["choices"][0]["message"]["content"].strip()
+                if msg_content and not msg_content.startswith("{"):
+                    return msg_content
+            except Exception:
+                pass
+
+        # Dynamic fallback assistant message
+        countries = ", ".join(preferences.get("country_names", []))
+        interests = ", ".join(preferences.get("place_of_interests", []))
+        activities = ", ".join(preferences.get("place_of_activites", []))
+        vibes = ", ".join(preferences.get("vibe", []))
+        top_names = ", ".join([p.get("name", "") for p in places[:3]])
+
+        if strict_conjunction:
+            return f"I tightened the search so every destination combines both {interests} and {activities} together! Here are top picks like {top_names} that fit all your criteria."
+        elif is_dissatisfied:
+            return f"I explored fresh alternatives outside previous recommendations. Here is a new selection of destinations featuring {vibes} {interests or activities} for you!"
+        elif countries:
+            return f"Here are {len(places)} great destinations in {countries} tailored to your {vibes} {interests} trip with {activities}."
+        else:
+            return f"Based on your preferences for a {vibes} trip featuring {interests or activities}, I've curated these {len(places)} top recommendations for you!"
+
+    def process_conversational_turn(self, user_input: str, session_id: str = None, target_count: int = 6) -> dict:
+        """
+        Processes a multi-turn conversation step:
+        1. Contextual extraction (cumulative preferences + dissatisfaction/conjunction detection).
+        2. Deduplication against already seen destinations.
+        3. Strict conjunction filtering & compound Wikipedia retrieval when requested.
+        4. Exploratory fallback search on dissatisfaction.
+        5. Natural language assistant message generation.
+        """
+        from backend.session_manager import session_manager
+
+        session = session_manager.get_or_create_session(session_id)
+        recent_dialogue = session.get_recent_dialogue(max_turns=3)
+
+        # Step 1: Contextual preference extraction
+        conv_result = self.extractor.extract_conversational(
+            user_input=user_input,
+            recent_dialogue=recent_dialogue,
+            cumulative_preferences=session.cumulative_preferences
+        )
+
+        updated_prefs = conv_result["updated_preferences"]
+        is_dissatisfied = conv_result["is_dissatisfied"]
+        strict_conjunction = conv_result["strict_conjunction"] or session.strict_conjunction
+        wants_fresh = conv_result["wants_fresh_alternatives"]
+
+        # Update session state
+        session.cumulative_preferences = updated_prefs
+        session.strict_conjunction = strict_conjunction
+        if is_dissatisfied:
+            session.dissatisfaction_count += 1
+
+        print(f"\n[ConversationalAgent] Turn for Session '{session.session_id}': '{user_input}'", flush=True)
+        print(f"[ConversationalAgent] Dissatisfied: {is_dissatisfied} | Strict Conjunction: {strict_conjunction} | Cumulative Prefs: {updated_prefs}", flush=True)
+
+        # Step 2: Database Search (filtered by seen places)
+        db_results = self.db_agent.search_database(updated_prefs, top_k=target_count * 2)
+        fresh_db_results = [
+            p for p in db_results
+            if str(p.get("name", "")).strip().lower() not in session.seen_place_names
+        ]
+
+        # Problem 5: Heuristic Pre-Filtering + Full Conversation Semantic Validation
+        is_valid_db, valid_db_places = self.check_validity(
+            fresh_db_results,
+            updated_prefs,
+            user_input,
+            min_confidence=0.70,
+            dialogue_history=recent_dialogue
+        )
+        for p in valid_db_places:
+            p["source"] = "Local Database"
+
+        combined_places = list(valid_db_places)
+        seen_in_turn = {str(p.get("name", "")).strip().lower() for p in combined_places}
+
+        # Step 3: Hybrid Exploration (if < target_count or user is dissatisfied/wants fresh places)
+        if len(combined_places) < target_count or is_dissatisfied or wants_fresh:
+            needed = max(target_count - len(combined_places), 4)
+            print(f"[ConversationalAgent] Searching online (needed: {needed}) with strict conjunction={strict_conjunction}...", flush=True)
+
+            search_candidates = self.search_agent.search_online(updated_prefs, max_results=max(10, needed * 2))
+
+            # Filter out places already seen in previous turns AND current turn
+            fresh_search_candidates = [
+                p for p in search_candidates
+                if str(p.get("name", "")).strip().lower() not in session.seen_place_names
+                and str(p.get("name", "")).strip().lower() not in seen_in_turn
+            ]
+
+            if fresh_search_candidates:
+                is_valid_search, valid_search_places = self.check_validity(
+                    fresh_search_candidates,
+                    updated_prefs,
+                    user_input,
+                    min_confidence=0.55,
+                    dialogue_history=recent_dialogue
+                )
+                if valid_search_places:
+                    # Ingest newly discovered rich ~300-500 word destinations into ChromaDB / LlamaIndex for future use!
+                    self.db_agent.insert_places(valid_search_places)
+
+                for p in valid_search_places:
+                    p["source"] = "Web / Wikipedia Discovery"
+                    p_name = str(p.get("name", "")).strip().lower()
+                    if p_name not in seen_in_turn:
+                        seen_in_turn.add(p_name)
+                        combined_places.append(p)
+                        if len(combined_places) >= target_count:
+                            break
+
+        # Step 4: Strict Conjunction Ranking Adjustment
+        if strict_conjunction:
+            # If user demanded BOTH mountain and hiking, boost candidates that have both
+            for p in combined_places:
+                content_lower = f"{p.get('name', '')} {p.get('text_content', '')}".lower()
+                has_all_interests = all(i.lower() in content_lower for i in updated_prefs.get("place_of_interests", []))
+                has_all_activities = all(a.lower() in content_lower for a in updated_prefs.get("place_of_activites", []))
+                if has_all_interests and has_all_activities:
+                    p["confidence_score"] = min(1.0, p.get("confidence_score", 0.70) + 0.15)
+                    p["confidence"] = f"{int(p['confidence_score'] * 100)}%"
+                    p["evaluation_reason"] = "Strict Conjunction Match: Contains all requested features together."
+
+        # Sort and select top places
+        combined_places.sort(key=lambda x: x.get("confidence_score", 0.0), reverse=True)
+        final_places = combined_places[:target_count]
+
+        # Step 5: Generate natural assistant response
+        assistant_message = self._generate_assistant_reply(user_input, final_places, updated_prefs, is_dissatisfied, strict_conjunction)
+
+        # Record in session history
+        session.add_message(role="user", content=user_input)
+        session.add_message(role="assistant", content=assistant_message, places=final_places)
+
+        return {
+            "session_id": session.session_id,
+            "success": len(final_places) > 0,
+            "user_query": user_input,
+            "assistant_message": assistant_message,
+            "places": final_places,
+            "total_places": len(final_places),
+            "cumulative_preferences": updated_prefs,
+            "is_dissatisfied": is_dissatisfied,
+            "strict_conjunction": strict_conjunction,
+            "history_turns": len(session.messages) // 2
+        }
 
     def run_interactive_chat(self):
         print("\n=======================================================")
