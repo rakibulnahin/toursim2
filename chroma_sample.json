@@ -1726,5 +1726,90 @@
     ],
     "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Central_Sydney_Districts.png/960px-Central_Sydney_Districts.png?utm_source=en.wikivoyage.org&utm_campaign=api&utm_content=thumbnail",
     "source_url": "https://en.wikivoyage.org/wiki/Sydney"
+  },
+  {
+    "name": "New York City",
+    "text_content": "New York (known as \"The Big Apple\", \"NYC,\" and often called \"New York City\") is a global center for media, entertainment, art, fashion, research, finance, and trade. The bustling, cosmopolitan heart of the 4th largest metropolis in the world and by far the most populous city in the United States, New York has long been a key entry point and a defining city for the nation. From the Statue of Liberty in the harbor to the Empire State Building towering over the Manhattan skyline, from the tunnels of the subway to the riches of Wall Street, from the bright signs of Times Square to the naturalistic beauty of Central Park, and from Yankee Stadium in the Bronx to Coney Island in Brooklyn, New York's landmarks are quintessential American landmarks. The city's neighborhoods and streets are so iconic they have become ingrained into the American consciousness. Here the power, wealth and culture of the United States is on full display in one of the largest and most iconic skylines in the world, in the food and music to be found around...",
+    "latitude": 40.719,
+    "longitude": -74.002,
+    "place_of_interests": [
+      "city"
+    ],
+    "vibe": [
+      "nice city vibe",
+      "many people"
+    ],
+    "place_of_activites": [
+      "shopping",
+      "dining in restaurants"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/New_York_City_District_Map.svg/960px-New_York_City_District_Map.svg.png?utm_source=en.wikivoyage.org&utm_campaign=api&utm_content=thumbnail",
+    "source_url": "https://en.wikivoyage.org/wiki/New_York_City"
+  },
+  {
+    "name": "Squamish",
+    "text_content": "Squamish is a town of about 20,000 people (2016) in the Sea to Sky region of British Columbia half-way between Vancouver and Whistler. Squamish calls itself \"the Outdoor Recreation Capital of Canada\" due to the abundant rock climbing, hiking, mountain biking, golf, fishing, kayaking, bouldering, white-water rafting, horseback riding, scuba diving and other activities readily available in the area. The town of Squamish had its beginning during the construction of the Pacific Great Eastern Railway in the 1910s. It was the first southern terminus of that railway (now a part of Canadian National Railway). The town remains important in the operations of the line and also the port. Forestry has traditionally been the main industry in the area, and the town's largest employer was the Western Forest Products pulp mill. However, Western Pulp's Squamish Operation shut down in 2006. Before the pulp mill, the town's largest employer had been International Forest Products' () sawmill and logging operation, which closed in 2004. Squamish has become popular with Vancouver and Whistler residents escaping the increased cost of living in those places, both...",
+    "latitude": 49.701,
+    "longitude": -123.1583,
+    "place_of_interests": [
+      "beach",
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/eb/Chief_RP%282%29.JPG/960px-Chief_RP%282%29.JPG?utm_source=en.wikivoyage.org&utm_campaign=api&utm_content=thumbnail",
+    "source_url": "https://en.wikivoyage.org/wiki/Squamish"
+  },
+  {
+    "name": "Sea to Sky",
+    "text_content": "The Sea to Sky region stretches from the North Shore up the east side of Howe Sound to Squamish, the gateway to British Columbia's magnificent alpine country of forests, lakes, and year round world class outdoor activities. The Sea-to-Sky Highway (Highway 99), which gives the region its name, clings to the mountainsides, letting you drive from Vancouver to Whistler, one of North America's top ski resorts, in two hours.  Further in is Pemberton. The area is rich with archaeological sites and historical lore of the Salish First Nations.\n\nHere are the communities in the region, listed as you encounter them heading north from Vancouver.\n\n1 Lions Bay-Britannia Beach \u2014 a string of communities along the eastern shore of Howe Sound",
+    "latitude": 49.9361,
+    "longitude": -123.1667,
+    "place_of_interests": [
+      "beach",
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Britannia_Beach_abandoned_pier_debris.jpg/960px-Britannia_Beach_abandoned_pier_debris.jpg?utm_source=en.wikivoyage.org&utm_campaign=api&utm_content=thumbnail",
+    "source_url": "https://en.wikivoyage.org/wiki/Sea_to_Sky"
+  },
+  {
+    "name": "West Vancouver",
+    "text_content": "West Vancouver  is a suburban area of Vancouver's North Shore in the Lower Mainland of British Columbia, Canada. It has a few good parks, excellent hikes and some of the most expensive property in Canada.\n\nWest Vancouver is mainly a residential district as it has no manufacturing industry by law.  Many of its residents commute to downtown Vancouver, work at home, or are retired.  It is home to some very large expensive houses, most with views of Vancouver Island, English Bay, and/or Howe Sound.  West Van (as the locals call it) is Canada's wealthiest municipality (followed by its neighbor, North Vancouver).  Together with the District of North Vancouver and City of North Vancouver, it is part of a local regional grouping referred to as the North Shore municipalities, or simply \"The North Shore\".\n\nSee Vancouver for options to get in the Vancouver area by plane, by bus, and by train, and by boat.",
+    "latitude": 49.33855,
+    "longitude": -123.19038,
+    "place_of_interests": [
+      "beach",
+      "mountain"
+    ],
+    "vibe": [
+      "relaxing"
+    ],
+    "place_of_activites": [
+      "hiking"
+    ],
+    "country": "International",
+    "state": "",
+    "locality": [],
+    "image_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Tugboat_in_front_of_North_Vancouver.jpg/960px-Tugboat_in_front_of_North_Vancouver.jpg?utm_source=en.wikivoyage.org&utm_campaign=api&utm_content=thumbnail",
+    "source_url": "https://en.wikivoyage.org/wiki/West_Vancouver"
   }
 ]

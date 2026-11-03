@@ -72,6 +72,38 @@ function App() {
 
   const [error, setError] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [aiSummarizing, setAiSummarizing] = useState(false);
+
+  const handleGenerateAiGuide = async () => {
+    if (!selectedPlace || aiSummarizing) return;
+    setAiSummarizing(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/destination/summarize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: selectedPlace.name,
+          raw_extract: selectedPlace.raw_extract || selectedPlace.text_content || "",
+          user_context: query || ""
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedPlace(prev => ({
+          ...prev,
+          text_content: data.summary_500_words,
+          is_ai_500_word: true,
+          vibe: data.vibe && data.vibe.length ? data.vibe : prev.vibe,
+          place_of_activites: data.place_of_activites && data.place_of_activites.length ? data.place_of_activites : prev.place_of_activites
+        }));
+        setPlaces(prevPlaces => prevPlaces.map(p => p.name === selectedPlace.name ? { ...p, text_content: data.summary_500_words, is_ai_500_word: true } : p));
+      }
+    } catch (err) {
+      console.error("On-demand AI summarization error:", err);
+    } finally {
+      setAiSummarizing(false);
+    }
+  };
 
   const [history, setHistory] = useState(() => {
     try {
@@ -562,10 +594,40 @@ function App() {
             </div>
 
             <div>
-              <h4 style={{ fontSize: "0.85rem", textTransform: "uppercase", color: "var(--text-dim)", marginBottom: "6px" }}>
-                Overview
-              </h4>
-              <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: "1.6" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
+                <h4 style={{ fontSize: "0.85rem", textTransform: "uppercase", color: "var(--text-dim)", margin: 0, display: "flex", alignItems: "center", gap: "6px" }}>
+                  Overview
+                  {selectedPlace.is_ai_500_word && (
+                    <span style={{ color: "var(--accent-cyan)", fontSize: "0.75rem", textTransform: "none", background: "rgba(56, 189, 248, 0.1)", padding: "2px 8px", borderRadius: "10px" }}>
+                      ✨ 500-Word AI Guide
+                    </span>
+                  )}
+                </h4>
+                {!selectedPlace.is_ai_500_word && (
+                  <button
+                    className="action-btn"
+                    style={{
+                      fontSize: "0.75rem",
+                      padding: "4px 10px",
+                      background: "rgba(56, 189, 248, 0.12)",
+                      border: "1px solid rgba(56, 189, 248, 0.3)",
+                      color: "var(--accent-cyan)",
+                      borderRadius: "var(--radius-sm)",
+                      cursor: aiSummarizing ? "wait" : "pointer",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px"
+                    }}
+                    onClick={handleGenerateAiGuide}
+                    disabled={aiSummarizing}
+                    title="Generate an in-depth 500-word AI travel guide with LLM on-demand"
+                  >
+                    <Sparkles size={12} />
+                    {aiSummarizing ? "Synthesizing AI Guide..." : "Generate 500-Word AI Guide"}
+                  </button>
+                )}
+              </div>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: "1.6", whiteSpace: "pre-line" }}>
                 {selectedPlace.text_content}
               </p>
             </div>

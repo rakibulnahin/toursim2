@@ -60,6 +60,7 @@ class DestinationPlace(BaseModel):
     evaluation_reason: Optional[str] = ""
     source_url: Optional[str] = ""
     source: Optional[str] = "Hybrid"
+    raw_extract: Optional[str] = ""
 
 class ChatResponse(BaseModel):
     success: bool
@@ -150,6 +151,54 @@ def reset_conversation_session(session_id: str):
     from backend.session_manager import session_manager
     success = session_manager.reset_session(session_id)
     return {"success": success, "session_id": session_id, "message": "Session reset successfully."}
+
+class SummarizeDestinationRequest(BaseModel):
+    name: str
+    raw_extract: Optional[str] = ""
+    user_context: Optional[str] = ""
+
+class SummarizeDestinationResponse(BaseModel):
+    name: str
+    summary_500_words: str
+    country: Optional[str] = ""
+    state: Optional[str] = ""
+    locality: Optional[Any] = []
+    vibe: Optional[List[str]] = []
+    place_of_activites: Optional[List[str]] = []
+    is_ai_generated: bool = True
+
+@app.post("/api/destination/summarize", response_model=SummarizeDestinationResponse)
+def summarize_destination_on_demand(req: SummarizeDestinationRequest):
+    """
+    On-Demand Summarization (Solution 2):
+    Generates a rich 500-word AI travel guide ONLY when requested for this specific destination,
+    and updates ChromaDB vector store for future queries.
+    """
+    name = req.name.strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="Destination name is required.")
+
+    agent = get_orchestrator()
+    try:
+        summary_data = agent.search_agent.generate_ondemand_summary(
+            title=name,
+            raw_extract=req.raw_extract or "",
+            user_context=req.user_context or ""
+        )
+        # Update ChromaDB / local sample with the new rich 500-word summary
+        agent.db_agent.insert_places([{
+            "name": name,
+            "text_content": summary_data["summary_500_words"],
+            "country": summary_data.get("country", "International"),
+            "state": summary_data.get("state", ""),
+            "locality": summary_data.get("locality", []),
+            "vibe": summary_data.get("vibe", []),
+            "place_of_activites": summary_data.get("place_of_activites", [])
+        }])
+        return summary_data
+    except Exception as e:
+        print(f"[FastAPI] Error in on-demand summarization: {e}", flush=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/places")
 def get_cached_places():

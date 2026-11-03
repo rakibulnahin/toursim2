@@ -112,7 +112,7 @@ class PreferenceExtractor:
         if self.llm is not None:
             try:
                 print(f"[PreferenceExtractor] Running LLM extraction on prompt: '{user_input}'...", flush=True)
-                response = self.llm.call_llm(EXTRACTOR_SYSTEM_PROMPT, user_input)
+                response = self.llm.call_llm(EXTRACTOR_SYSTEM_PROMPT, user_input, max_tokens=180)
                 raw_output = response["choices"][0]["message"]["content"]
                 parsed = json.loads(raw_output)
                 validated = self.validate_and_format_schema(parsed)
